@@ -10,9 +10,14 @@ function App() {
     ],
   });
 
-  const [randomMovie, setRandomMovie] = useState([]);
+  const [randomMovie, setRandomMovie] = useState("");
+  const [message, setMessage] = useState("");
 
   const addMovie = () => {
+    setMessage("");
+    if (movies.movieTitles.length === 10) {
+      return;
+    }
     const newMovie = {
       title: "",
     };
@@ -26,6 +31,7 @@ function App() {
     let data = { ...movies };
     data.movieTitles.splice(index, 1);
     setMovies({ ...movies });
+    validator();
   };
 
   const handleMovieChange = (e, index) => {
@@ -41,6 +47,20 @@ function App() {
     setRandomMovie(random);
   };
 
+  const validator = () => {
+    if (movies.movieTitles.length === 0) {
+      setRandomMovie("");
+      setMessage("There's no movies!");
+      return;
+    }
+    if (movies.movieTitles.length < 3) {
+      setMessage("Ya need at least three, bud.");
+    }
+    if (movies.movieTitles.length > 10) {
+      setMessage("That's enough movies!");
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("spinning!");
@@ -51,7 +71,8 @@ function App() {
     <div className="App">
       <h1>Movie Roulette</h1>
       <p>
-        Winner: <b>{randomMovie.title}</b>
+        {message}
+        <b>{randomMovie.title}</b>
       </p>
       <div className="input-container">
         {movies.movieTitles.map((movie, index) => {
@@ -71,8 +92,10 @@ function App() {
         })}
       </div>
       <div className="button-container">
-        <button onClick={handleSubmit}>Spin</button>
-        <button onClick={addMovie}>Add Movies</button>
+        <button onClick={handleSubmit} disabled={message}>
+          Spin
+        </button>
+        <button onClick={addMovie}>Add Movie</button>
       </div>
     </div>
   );
