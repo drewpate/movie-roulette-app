@@ -7,6 +7,12 @@ function App() {
       {
         title: "",
       },
+      {
+        title: "",
+      },
+      {
+        title: "",
+      },
     ],
   });
 
@@ -15,9 +21,7 @@ function App() {
 
   const addMovie = () => {
     setMessage("");
-    if (movies.movieTitles.length === 10) {
-      return;
-    }
+    validator();
     const newMovie = {
       title: "",
     };
@@ -28,15 +32,17 @@ function App() {
   };
 
   const removeMovie = (index) => {
+    setMessage("");
+    validator();
     let data = { ...movies };
     data.movieTitles.splice(index, 1);
     setMovies({ ...movies });
-    validator();
   };
 
   const handleMovieChange = (e, index) => {
     const updatedMovies = { ...movies };
     updatedMovies.movieTitles[index][e.target.name] = e.target.value;
+    validator();
     setMovies(updatedMovies);
   };
 
@@ -51,19 +57,23 @@ function App() {
     if (movies.movieTitles.length === 0) {
       setRandomMovie("");
       setMessage("There's no movies!");
-      return;
     }
-    if (movies.movieTitles.length < 3) {
+    if (movies.movieTitles.length < 2) {
+      setRandomMovie("");
       setMessage("Ya need at least three, bud.");
     }
-    if (movies.movieTitles.length > 10) {
+    if (movies.movieTitles.length >= 9) {
       setMessage("That's enough movies!");
+      return;
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // validator();
+    console.log(movies.movieTitles);
     console.log("spinning!");
+
     getRandom();
   };
 
@@ -84,6 +94,7 @@ function App() {
                 id="movie"
                 label="Movie Title"
                 value={movie.title}
+                required
                 onChange={(e) => handleMovieChange(e, index)}
               />
               <button onClick={removeMovie}>Remove</button>
@@ -95,7 +106,9 @@ function App() {
         <button onClick={handleSubmit} disabled={message}>
           Spin
         </button>
-        <button onClick={addMovie}>Add Movie</button>
+        <button onClick={addMovie} disabled={message}>
+          Add Movie
+        </button>
       </div>
     </div>
   );
