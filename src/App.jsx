@@ -7,12 +7,6 @@ function App() {
       {
         title: "",
       },
-      {
-        title: "",
-      },
-      {
-        title: "",
-      },
     ],
   });
 
@@ -20,8 +14,12 @@ function App() {
   const [message, setMessage] = useState("");
 
   const addMovie = () => {
+    setRandomMovie("");
     setMessage("");
-    validator();
+    if (movies.movieTitles.length >= 9) {
+      setRandomMovie("");
+      return setMessage("That's enough movies!");
+    }
     const newMovie = {
       title: "",
     };
@@ -32,17 +30,20 @@ function App() {
   };
 
   const removeMovie = (index) => {
-    setMessage("");
-    validator();
+    if (movies.movieTitles.length <= 2) {
+      setRandomMovie("");
+      return setMessage("Ya need at least three, bud.");
+    }
     let data = { ...movies };
     data.movieTitles.splice(index, 1);
     setMovies({ ...movies });
   };
 
   const handleMovieChange = (e, index) => {
+    setMessage("");
+    setRandomMovie("");
     const updatedMovies = { ...movies };
     updatedMovies.movieTitles[index][e.target.name] = e.target.value;
-    validator();
     setMovies(updatedMovies);
   };
 
@@ -53,27 +54,17 @@ function App() {
     setRandomMovie(random);
   };
 
-  const validator = () => {
-    if (movies.movieTitles.length === 0) {
-      setRandomMovie("");
-      setMessage("There's no movies!");
-    }
-    if (movies.movieTitles.length < 2) {
-      setRandomMovie("");
-      setMessage("Ya need at least three, bud.");
-    }
-    if (movies.movieTitles.length >= 9) {
-      setMessage("That's enough movies!");
-      return;
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // validator();
-    console.log(movies.movieTitles);
-    console.log("spinning!");
+    let title = movies.movieTitles;
 
+    if (title.some(({ title }) => title === "")) {
+      setRandomMovie("");
+      return setMessage("No Empty Fields Allowed!");
+    }
+    console.log(movies.movieTitles);
+    console.log(movies.movieTitles.length);
+    console.log("spinning!");
     getRandom();
   };
 
@@ -106,9 +97,7 @@ function App() {
         <button onClick={handleSubmit} disabled={message}>
           Spin
         </button>
-        <button onClick={addMovie} disabled={message}>
-          Add Movie
-        </button>
+        <button onClick={addMovie}>Add Movie</button>
       </div>
     </div>
   );
