@@ -16,18 +16,16 @@ function App() {
     ],
   });
 
-  const [randomMovie, setRandomMovie] = useState("");
   const [messages, setMessages] = useState({
+    randomMovie: "",
     spin: "",
     remove: "",
     add: "",
   });
 
   const addMovie = () => {
-    setRandomMovie("");
     setMessages("");
     if (movies.movieTitles.length >= 9) {
-      setRandomMovie("");
       return setMessages({ add: "That's enough movies!" });
     }
     const newMovie = {
@@ -41,7 +39,6 @@ function App() {
 
   const removeMovie = (index) => {
     if (movies.movieTitles.length <= 3) {
-      setRandomMovie("");
       setMessages({ remove: "Ya need at least three there bud!" });
       return;
     }
@@ -53,7 +50,6 @@ function App() {
 
   const handleMovieChange = (e, index) => {
     setMessages("");
-    setRandomMovie("");
     const updatedMovies = { ...movies };
     updatedMovies.movieTitles[index][e.target.name] = e.target.value;
     setMovies(updatedMovies);
@@ -62,8 +58,9 @@ function App() {
   const getRandom = () => {
     let random =
       movies.movieTitles[Math.floor(Math.random() * movies.movieTitles.length)];
-    console.log(random);
-    setRandomMovie(random);
+    let string = JSON.stringify(random.title).replace(/"/g, "");
+    console.log(string);
+    setMessages({ randomMovie: string });
   };
 
   const handleSubmit = async (e) => {
@@ -71,7 +68,6 @@ function App() {
     let title = movies.movieTitles;
 
     if (title.some(({ title }) => title === "")) {
-      setRandomMovie("");
       return setMessages({ spin: "No empty fields allowed!" });
     }
     console.log(movies.movieTitles);
@@ -88,7 +84,7 @@ function App() {
         {messages.spin}
         {messages.add}
 
-        <b>{randomMovie.title}</b>
+        <b>{messages.randomMovie}</b>
       </p>
       <div className="input-container">
         {movies.movieTitles.map((movie, index) => {
