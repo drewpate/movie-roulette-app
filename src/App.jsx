@@ -7,18 +7,28 @@ function App() {
       {
         title: "",
       },
+      {
+        title: "",
+      },
+      {
+        title: "",
+      },
     ],
   });
 
   const [randomMovie, setRandomMovie] = useState("");
-  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState({
+    spin: "",
+    remove: "",
+    add: "",
+  });
 
   const addMovie = () => {
     setRandomMovie("");
-    setMessage("");
+    setMessages("");
     if (movies.movieTitles.length >= 9) {
       setRandomMovie("");
-      return setMessage("That's enough movies!");
+      return setMessages({ add: "That's enough movies!" });
     }
     const newMovie = {
       title: "",
@@ -30,17 +40,19 @@ function App() {
   };
 
   const removeMovie = (index) => {
-    if (movies.movieTitles.length <= 2) {
+    if (movies.movieTitles.length <= 3) {
       setRandomMovie("");
-      return setMessage("Ya need at least three, bud.");
+      setMessages({ remove: "Ya need at least three there bud!" });
+      return;
     }
+    setMessages("");
     let data = { ...movies };
     data.movieTitles.splice(index, 1);
     setMovies({ ...movies });
   };
 
   const handleMovieChange = (e, index) => {
-    setMessage("");
+    setMessages("");
     setRandomMovie("");
     const updatedMovies = { ...movies };
     updatedMovies.movieTitles[index][e.target.name] = e.target.value;
@@ -60,7 +72,7 @@ function App() {
 
     if (title.some(({ title }) => title === "")) {
       setRandomMovie("");
-      return setMessage("No Empty Fields Allowed!");
+      return setMessages({ spin: "No empty fields allowed!" });
     }
     console.log(movies.movieTitles);
     console.log(movies.movieTitles.length);
@@ -72,7 +84,10 @@ function App() {
     <div className="App">
       <h1>Movie Roulette</h1>
       <p>
-        {message}
+        {messages.remove}
+        {messages.spin}
+        {messages.add}
+
         <b>{randomMovie.title}</b>
       </p>
       <div className="input-container">
@@ -88,16 +103,20 @@ function App() {
                 required
                 onChange={(e) => handleMovieChange(e, index)}
               />
-              <button onClick={removeMovie}>Remove</button>
+              <button onClick={removeMovie} disabled={messages.remove}>
+                Remove
+              </button>
             </div>
           );
         })}
       </div>
       <div className="button-container">
-        <button onClick={handleSubmit} disabled={message}>
+        <button onClick={handleSubmit} disabled={messages.spin}>
           Spin
         </button>
-        <button onClick={addMovie}>Add Movie</button>
+        <button onClick={addMovie} disabled={messages.add}>
+          Add Movie
+        </button>
       </div>
     </div>
   );
