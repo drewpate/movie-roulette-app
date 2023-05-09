@@ -81,7 +81,7 @@ const Form = () => {
     <div className="App">
       <h1>Movie Roulette</h1>
       <p>
-        {messages.spin}
+        {Object.values(messages)}
 
         <b>{messages.randomMovie}</b>
       </p>
