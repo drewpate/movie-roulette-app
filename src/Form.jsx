@@ -81,9 +81,7 @@ const Form = () => {
     <div className="App">
       <h1>Movie Roulette</h1>
       <p>
-        {Object.values(messages)}
-
-        <b>{messages.randomMovie}</b>
+        <b>{Object.values(messages)}</b>
       </p>
       <div className="input-container">
         {movies.movieTitles.map((movie, index) => {
