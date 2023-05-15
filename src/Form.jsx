@@ -39,7 +39,7 @@ const Form = () => {
       }
     };
     setLoading(true);
-    const response = await  fetch('https://api.themoviedb.org/3/movie/550?api_key=45e691bba867ea92be8996cd2e7c4d64', options)
+    const response = await  fetch(`https://api.themoviedb.org/3/movie/550?api_key=${import.meta.env.VITE_API_KEY}`, options)
     .then(response => response.json())
     .then(response => response.title)
     .catch(err => console.error(err));
