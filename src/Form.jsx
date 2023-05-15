@@ -7,6 +7,10 @@ const Form = () => {
     remove: "",
     add: "",
   });
+
+  const [fetchedMovie, setFetchedMovie] = useState('')
+
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     console.log(messages);
   }, [messages]);
@@ -24,6 +28,25 @@ const Form = () => {
       },
     ],
   });
+
+  const fetchMovies = async() => {
+
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer' + import.meta.env.VITE_API_ACCESS_TOKEN
+      }
+    };
+    setLoading(true);
+    const response = await  fetch('https://api.themoviedb.org/3/movie/550?api_key=45e691bba867ea92be8996cd2e7c4d64', options)
+    .then(response => response.json())
+    .then(response => response.title)
+    .catch(err => console.error(err));
+    setFetchedMovie(response);
+    setLoading(false)
+  }
+
 
   const addMovie = () => {
     setMessages("");
@@ -71,8 +94,7 @@ const Form = () => {
     if (title.some(({ title }) => title === "")) {
       return setMessages({ spin: "No empty fields allowed!" });
     }
-    // console.log(movies.movieTitles);
-    // console.log(movies.movieTitles.length);
+   
     console.log("spinning!");
     getRandom();
   };
@@ -110,7 +132,9 @@ const Form = () => {
         <button onClick={addMovie} disabled={messages.add}>
           Add Movie
         </button>
+        <button onClick={fetchMovies} disabled={loading}>Fetch!</button>
       </div>
+      <p>{fetchedMovie}</p>
     </div>
   );
 };
