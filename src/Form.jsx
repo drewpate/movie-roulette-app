@@ -8,7 +8,12 @@ const Form = () => {
     add: "",
   });
 
-  const [fetchedMovie, setFetchedMovie] = useState('')
+  const [fetchedMovie, setFetchedMovie] = useState("");
+  const [searchString, setSearchString] = useState("");
+
+  const handleChange = (e) => {
+    setSearchString(e.target.value);
+  };
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -29,24 +34,26 @@ const Form = () => {
     ],
   });
 
-  const fetchMovies = async() => {
-
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer' + import.meta.env.VITE_API_ACCESS_TOKEN
-      }
-    };
+  const fetchMovies = () => {
     setLoading(true);
-    const response = await  fetch(`https://api.themoviedb.org/3/movie/550?api_key=${import.meta.env.VITE_API_KEY}`, options)
-    .then(response => response.json())
-    .then(response => response.title)
-    .catch(err => console.error(err));
-    setFetchedMovie(response);
-    setLoading(false)
-  }
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWU2OTFiYmE4NjdlYTkyYmU4OTk2Y2QyZTdjNGQ2NCIsInN1YiI6IjY0NjE3YzMzNmUwZDcyMDExZWFhOWJkNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4aCqvzQ2VxIZKk30-0Ow9hiPqA6bMc2Ry-ZpheudtJg",
+      },
+    };
 
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?query=${searchString}&include_adult=false&language=en-US&page=1`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => setFetchedMovie(response.results[0].title))
+      .catch((err) => console.error(err));
+    setLoading(false);
+  };
 
   const addMovie = () => {
     setMessages("");
@@ -94,7 +101,7 @@ const Form = () => {
     if (title.some(({ title }) => title === "")) {
       return setMessages({ spin: "No empty fields allowed!" });
     }
-   
+
     console.log("spinning!");
     getRandom();
   };
@@ -132,9 +139,22 @@ const Form = () => {
         <button onClick={addMovie} disabled={messages.add}>
           Add Movie
         </button>
-        <button onClick={fetchMovies} disabled={loading}>Fetch!</button>
       </div>
-      <p>{fetchedMovie}</p>
+      <input
+        type="search"
+        name="search"
+        id="moviesearch"
+        label="Search Result"
+        value={searchString}
+        onChange={handleChange}
+        placeholder="Search a movie title"
+      />
+      <div className="button-container">
+        <button onClick={fetchMovies} disabled={loading}>
+          Search
+        </button>
+        <p>{fetchedMovie}</p>
+      </div>
     </div>
   );
 };
