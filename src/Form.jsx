@@ -40,8 +40,7 @@ const Form = () => {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWU2OTFiYmE4NjdlYTkyYmU4OTk2Y2QyZTdjNGQ2NCIsInN1YiI6IjY0NjE3YzMzNmUwZDcyMDExZWFhOWJkNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4aCqvzQ2VxIZKk30-0Ow9hiPqA6bMc2Ry-ZpheudtJg",
+        Authorization: "Bearer " + import.meta.env.VITE_API_ACCESS_TOKEN,
       },
     };
 
