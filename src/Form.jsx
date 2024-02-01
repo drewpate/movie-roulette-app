@@ -94,6 +94,18 @@ const Form = () => {
     setMessages({ randomMovie: string });
   };
 
+  const addToList = () => {
+    console.log("Added " + fetchedMovie + " to the list!");
+    const fetchedMovieTitle = {
+      title: `${fetchedMovie}`,
+    };
+    setMovies({
+      ...movies,
+      movieTitles: [...movies.movieTitles, fetchedMovieTitle],
+    });
+    console.log(movies.movieTitles);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let title = movies.movieTitles;
@@ -139,20 +151,23 @@ const Form = () => {
           Add Movie
         </button>
       </div>
-      <input
-        type="search"
-        name="search"
-        id="moviesearch"
-        label="Search Result"
-        value={searchString}
-        onChange={handleChange}
-        placeholder="Search a movie title"
-      />
       <div className="button-container">
+        <input
+          type="search"
+          name="search"
+          id="moviesearch"
+          label="Search Result"
+          value={searchString}
+          onChange={handleChange}
+          placeholder="Search a movie title"
+        />
         <button onClick={fetchMovies} disabled={loading}>
           Search
         </button>
-        <p>{fetchedMovie}</p>
+        <p>{fetchedMovie}</p>{" "}
+        <button onClick={addToList} disabled={loading}>
+          Add
+        </button>
       </div>
     </div>
   );
